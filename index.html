@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Department - Integrated System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-bg: #0f172a;
+            --sidebar-active: #2563eb;
+            --main-bg: #f8fafc;
+            --text-main: #1e293b;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --border: #e2e8f0;
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- LOGIN PAGE --- */
+        #login-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--sidebar-bg) 0%, #1e293b 100%);
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card i { font-size: 3rem; color: var(--sidebar-active); margin-bottom: 20px; }
+        .login-card h2 { margin-bottom: 30px; color: var(--sidebar-bg); }
+
+        .input-box { text-align: left; margin-bottom: 20px; }
+        .input-box label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        .input-box input, .input-box select { 
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-family: inherit;
+        }
+
+        .login-btn {
+            width: 100%; padding: 12px; background: var(--sidebar-active); color: white;
+            border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+
+        /* --- TOP NAVIGATION BAR --- */
+        .top-navbar {
+            height: var(--header-height);
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: none; /* Shown after login */
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 10;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 8px 15px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        .search-container input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            outline: none;
+            width: 100%;
+        }
+
+        /* --- DASHBOARD STRUCTURE --- */
+        #dashboard-container {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-group { margin-bottom: 20px; flex-grow: 1; }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            gap: 12px;
+        }
+
+        .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-item.active {
+            background-color: var(--sidebar-active);
+            color: white;
+            border-radius: 0 50px 50px 0;
+            margin-right: 20px;
+        }
+
+        /* LOGOUT BUTTON - FIRST STYLE */
+        .logout-section { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .logout-btn {
+            width: 100%; padding: 12px; display: flex; align-items: center; gap: 12px;
+            background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
+            color: #94a3b8; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 0.95rem;
+        }
+        .logout-btn:hover { color: white; background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red); }
+
+        .main-container { flex: 1; overflow-y: auto; padding: 40px; }
+        .header { margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 1.8rem; }
+        .header p { color: #64748b; margin-top: 5px; }
+
+        .content-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .content-card h3 { margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: #64748b; font-size: 0.8rem; text-transform: uppercase; padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-grid .full-width { grid-column: span 2; }
+
+        .btn-group { margin-top: 30px; display: flex; gap: 15px; }
+        .text-btn { background: none; border: none; color: var(--sidebar-active); font-weight: 600; cursor: pointer; padding: 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div id="login-container">
+        <div class="login-card">
+            <i class="fas fa-fingerprint"></i>
+            <h2>Integrated Systems Login</h2>
+            <div class="input-box">
+                <label>Username</label>
+                <input type="text" placeholder="dept_user">
+            </div>
+            <div class="input-box">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••">
+            </div>
+            <button class="login-btn" onclick="showDashboard()">Login to Dashboard</button>
+        </div>
+    </div>
+
+    <div id="dashboard-container">
+        <nav class="sidebar">
+            <div class="logo-area"><i class="fas fa-shield-halved"></i> Integrated Systems HR</div>
+            <div class="nav-group">
+                <div class="nav-item active" id="nav-dash" onclick="showView('dashboard-main')"><i class="fas fa-chart-line"></i> Dashboard</div>
+                <div class="nav-item" id="nav-reg" onclick="showView('registration-view')"><i class="fas fa-user-plus"></i>Employee Registration</div>
+                <div class="nav-item" id="nav-pay-comp" onclick="showView('payroll-comp-view')"><i class="fas fa-sliders"></i>Payroll Components</div>
+                <div class="nav-item" id="nav-sal-struct" onclick="showView('salary-struct-view')"><i class="fas fa-file-invoice-dollar"></i>Salary Structures</div>
+                <div class="nav-item" id="nav-pay-entry" onclick="showView('payroll-entry-view')"><i class="fas fa-money-check-dollar"></i> Payroll Entry</div>
+                <div class="nav-item" id="nav-exp-claim" onclick="showView('expense-claim-view')"><i class="fas fa-receipt"></i> Expense Claims</div>
+            </div>
+            
+            <div class="logout-section">
+                <button class="logout-btn" onclick="location.reload()">
+                    <i class="fas fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <main class="main-container">
+            <div id="dashboard-main-view">
+                <div class="header"><h1>System Overview</h1><p>Global activity and summary.</p></div>
+                <div class="content-card">
+                    <h3>Recent Global Activity</h3>
+                    <table>
+                        <thead><tr><th>ID</th><th>Type</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>PR-2004-301</td><td>Payroll</td><td>2004-03-31</td><td>PHP 200,430</td><td><span class="status-pill">Posted</span></td></tr>
+                            <tr><td>EXP-2017-821</td><td>Expense</td><td>2017-02-15</td><td>PHP 8,219</td><td><span class="status-pill">Posted</span></td></tr>
+                            <tr><td>SAL-2008-544</td><td>Salary</td><td>2008-11-20</td><td>PHP 544,000</td><td><span class="status-pill">Posted</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="registration-view" style="display: none;">
+                <div class="header"><h1>Employee Registration</h1></div>
+                <div class="content-card" style="max-width: 600px;">
+                    <div class="form-grid">
+                        <div class="input-box full-width"><label>Employee ID</label><input type="text" placeholder="EMP-2026-001"></div>
+                        <div class="input-box"><label>First Name</label><input type="text" placeholder="Juan"></div>
+                        <div class="input-box"><label>Last Name</label><input type="text" placeholder="Dela Cruz"></div>
+                        <div class="input-box"><label>Department</label><input type="text" placeholder="IT"></div>
+                        <div class="input-box"><label>Status</label><select><option>Active</option><option>Inactive</option></select></div>
+                    </div>
+                    <div class="btn-group"><button class="text-btn">Save</button><button class="text-btn">Edit</button></div>
+                </div>
+                <div class="content-card">
+                    <h3>Registered Employees</h3>
+                    <table>
+                        <thead><tr><th>Emp ID</th><th>Name</th><th>Dept</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>EMP-2026-001</td><td>Juan Dela Cruz</td><td>IT</td><td>Active</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="payroll-comp-view" style="display: none;">
+                <div class="header"><h1>Payroll Components</h1></div>
+                <div class="content-card" style="max-width: 600px;">
+                    <div class="form-grid">
+                        <div class="input-box full-width"><label>Component ID</label><input type="text" placeholder="B-SAL-01"></div>
+                        <div class="input-box full-width"><label>Component Name</label><input type="text" placeholder="Basic Salary"></div>
+                        <div class="input-box"><label>Type</label><select><option>Earning</option><option>Deduction</option></select></div>
+                        <div class="input-box"><label>Default Amount</label><input type="text" placeholder="PHP 3000"></div>
+                    </div>
+                    <div class="btn-group"><button class="text-btn">Save</button></div>
+                </div>
+                <div class="content-card">
+                    <h3>Configured Components</h3>
+                    <table>
+                        <thead><tr><th>Comp ID</th><th>Name</th><th>Type</th><th>Default Amount</th></tr></thead>
+                        <tbody>
+                            <tr><td>B-SAL-01</td><td>Basic Salary</td><td>Earning</td><td>PHP 30,000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="salary-struct-view" style="display: none;">
+                <div class="header"><h1>Salary Structures</h1></div>
+                <div class="content-card" style="max-width: 600px;">
+                    <div class="form-grid">
+                        <div class="input-box full-width"><label>Structure ID</label><input type="text" placeholder="SALES-MGR-GLB"></div>
+                        <div class="input-box full-width"><label>Employee ID</label><input type="text" placeholder="EMP-2026-001"></div>
+                        <div class="input-box"><label>Total CTC</label><input type="text" placeholder="PHP 49000"></div>
+                    </div>
+                    <div class="btn-group"><button class="text-btn">Save</button></div>
+                </div>
+                <div class="content-card">
+                    <h3>Current Assignments</h3>
+                    <table>
+                        <thead><tr><th>Structure ID</th><th>Emp ID</th><th>Total CTC</th></tr></thead>
+                        <tbody>
+                            <tr><td>SALES-MGR-GLB</td><td>EMP-2026-001</td><td>PHP 49,000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="payroll-entry-view" style="display: none;">
+                <div class="header"><h1>Payroll Entry</h1></div>
+                <div class="content-card" style="max-width: 600px;">
+                    <div class="form-grid">
+                        <div class="input-box full-width"><label>Payroll ID</label><input type="text" placeholder="PR-2026-301"></div>
+                        <div class="input-box"><label>Posting Date</label><input type="date"></div>
+                        <div class="input-box"><label>Journal Entry ID</label><input type="text" placeholder="JV-2026-001"></div>
+                    </div>
+                    <div class="btn-group"><button class="text-btn">Process</button></div>
+                </div>
+                <div class="content-card">
+                    <h3>Payroll Batch History</h3>
+                    <table>
+                        <thead><tr><th>Payroll ID</th><th>Post Date</th><th>JV ID</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>PR-2026-301</td><td>2026-01-31</td><td>JV-2026-001</td><td><span class="status-pill">Posted</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="expense-claim-view" style="display: none;">
+                <div class="header"><h1>Expense Claims</h1></div>
+                <div class="content-card" style="max-width: 600px;">
+                    <div class="form-grid">
+                        <div class="input-box full-width"><label>Claim ID</label><input type="text" placeholder="EXP-2017-821"></div>
+                        <div class="input-box full-width"><label>Employee ID</label><input type="text" placeholder="EMP-2026-001"></div>
+                        <div class="input-box"><label>Expense Type</label><select><option>Travel</option><option>Meal</option></select></div>
+                        <div class="input-box"><label>Claim Amount</label><input type="text" placeholder="PHP 8219"></div>
+                    </div>
+                    <div class="btn-group"><button class="text-btn">Submit</button></div>
+                </div>
+                <div class="content-card">
+                    <h3>Recent Claims</h3>
+                    <table>
+                        <thead><tr><th>Claim ID</th><th>Emp ID</th><th>Type</th><th>Amount</th></tr></thead>
+                        <tbody>
+                            <tr><td>EXP-2017-821</td><td>EMP-2026-001</td><td>Travel</td><td>PHP 8,219</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showDashboard() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'flex';
+            document.getElementById('top-nav').style.display = 'flex';
+        }
+
+        function showView(viewId) {
+            const views = ['dashboard-main-view', 'registration-view', 'payroll-comp-view', 'salary-struct-view', 'payroll-entry-view', 'expense-claim-view'];
+            views.forEach(v => {
+                document.getElementById(v).style.display = (v.includes(viewId)) ? 'block' : 'none';
+            });
+            
+            const navMap = {
+                'dashboard-main': 'nav-dash', 'registration-view': 'nav-reg', 
+                'payroll-comp-view': 'nav-pay-comp', 'salary-struct-view': 'nav-sal-struct',
+                'payroll-entry-view': 'nav-pay-entry', 'expense-claim-view': 'nav-exp-claim'
+            };
+            
+            Object.values(navMap).forEach(id => document.getElementById(id).classList.remove('active'));
+            document.getElementById(navMap[viewId]).classList.add('active');
+        }
+    </script>
+</body>
+</html>
