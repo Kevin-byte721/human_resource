@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Department - Integrated System</title>
+    <title>Integrated System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -63,35 +63,6 @@
             border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
 
-        /* --- TOP NAVIGATION BAR --- */
-        .top-navbar {
-            height: var(--header-height);
-            background: white;
-            border-bottom: 1px solid var(--border);
-            display: none; /* Shown after login */
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            z-index: 10;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            background: #f1f5f9;
-            padding: 8px 15px;
-            border-radius: 8px;
-            width: 300px;
-        }
-
-        .search-container input {
-            border: none;
-            background: transparent;
-            margin-left: 10px;
-            outline: none;
-            width: 100%;
-        }
-
         /* --- DASHBOARD STRUCTURE --- */
         #dashboard-container {
             display: none;
@@ -138,7 +109,6 @@
             margin-right: 20px;
         }
 
-        /* LOGOUT BUTTON - FIRST STYLE */
         .logout-section { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
         .logout-btn {
             width: 100%; padding: 12px; display: flex; align-items: center; gap: 12px;
@@ -171,22 +141,122 @@
 <body>
 
     <div id="login-container">
-        <div class="login-card">
-            <i class="fas fa-fingerprint"></i>
-            <h2>Integrated Systems Login</h2>
-            <div class="input-box">
-                <label>Username</label>
-                <input type="text" placeholder="dept_user">
-            </div>
-            <div class="input-box">
-                <label>Password</label>
-                <input type="password" placeholder="••••••••">
-            </div>
-            <button class="login-btn" onclick="showDashboard()">Login to Dashboard</button>
+    <div class="login-card">
+        <i class="fas fa-fingerprint"></i>
+        <h2>Integrated Systems Login</h2>
+        <div class="input-box">
+            <label>Department Role</label>
+            <select id="dept-select" style="width: 100%; background: transparent; border: none; color: inherit; outline: none; padding: 5px 0;">
+                <option value="" disabled selected style="background: #fff; color: #000;">Select User...</option>
+                <option value="adm_user" style="background: #fff; color: #000;">Master Administrator</option>
+                <option value="acc_user" style="background: #fff; color: #000;">Accounts</option>
+                <option value="hr_user" style="background: #fff; color: #000;">Human Resources</option>
+                <option value="crm_user" style="background: #fff; color: #000;">CRM Management</option>
+                <option value="dist_user" style="background: #fff; color: #000;">Distrubution / Stocks</option>
+                <option value="buy_user" style="background: #fff; color: #000;">Buying / Procurement</option>
+                <option value="proj_user" style="background: #fff; color: #000;">Project Management</option>
+                <option value="sell_user" style="background: #fff; color: #000;">Selling / Sales</option>
+                <option value="serv_user" style="background: #fff; color: #000;">Services</option>
+                <option value="mfg_user" style="background: #fff; color: #000;">Manufacturing Control</option>
+            </select>
         </div>
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" id="password-input" placeholder="••••••••">
+        </div>
+        <button class="login-btn" onclick="showDashboard()">Login to Dashboard</button>
     </div>
+</div>
 
-    <div id="dashboard-container">
+    <div id="dashboard-container"></div>
+
+    <script>
+    const adminMasterHubHTML = `
+    <div class="main-container" style="padding: 40px; background: #f8fafc; min-height: 100vh;">
+        <div class="header" style="margin-bottom: 30px;">
+            <h1>Integrated System Modules</h1>
+            <p>Master Administrator Access - Select a module to manage.</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+            <div class="content-card" style="cursor: pointer; transition: transform 0.2s;" onclick="loadModule('crm')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #eff6ff; color: #2563eb; padding: 15px; border-radius: 12px;"><i class="fas fa-users-cog fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">CRM Management</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Manage customer relationships and interactions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('buying')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #fff7ed; color: #ea580c; padding: 15px; border-radius: 12px;"><i class="fas fa-shopping-cart fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Buying / Procurement</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Handle purchase orders and supplier management</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('selling')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #f0fdf4; color: #16a34a; padding: 15px; border-radius: 12px;"><i class="fas fa-chart-line fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Selling / Sales</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Manage sales, orders, and customer relationships</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('service')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #ecfeff; color: #0891b2; padding: 15px; border-radius: 12px;"><i class="fas fa-headset fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Service Operations</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Manage service tickets, support, and maintenance</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('mfg')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #fef2f2; color: #dc2626; padding: 15px; border-radius: 12px;"><i class="fas fa-industry fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Manufacturing Control</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Oversee production processes and workflows</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('hr')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #f5f3ff; color: #7c3aed; padding: 15px; border-radius: 12px;"><i class="fas fa-user-tie fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Human Resources</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Manage employees, payroll, and HR</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="cursor: pointer;" onclick="loadModule('project')">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #f0f9ff; color: #0284c7; padding: 15px; border-radius: 12px;"><i class="fas fa-project-diagram fa-2x"></i></div>
+                    <div>
+                        <h3 style="margin:0">Project Management</h3>
+                        <p style="font-size: 0.9rem; color: #64748b;">Plan, track, and manage projects and tasks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="location.reload()" style="margin-top: 10px; padding: 12px 24px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <i class="fas fa-sign-out-alt"></i> Exit Admin Mode
+        </button>
+    </div>
+`;
+    // --- DASHBOARD CONTENT (HR) ---
+    const dashboardHTML = `
         <nav class="sidebar">
             <div class="logo-area"><i class="fas fa-shield-halved"></i> Integrated Systems HR</div>
             <div class="nav-group">
@@ -329,31 +399,3061 @@
                     </table>
                 </div>
             </div>
-        </main>
+        </main>`;
+
+    // --- CRM DASHBOARD CONTENT ---
+    const crmDashboardHTML = `
+        <nav class="sidebar">
+            <div class="logo-area"><i class="fas fa-users-gear"></i> Integrated Systems CRM</div>
+            <div class="nav-group">
+    <div class="nav-item active" id="nav-cust" onclick="showView('customer-view')">
+        <i class="fas fa-address-book"></i> Customers
+    </div>
+    <div class="nav-item" id="nav-leads" onclick="showView('leads-view')">
+        <i class="fas fa-user-plus"></i> Leads
+    </div>
+    <div class="nav-item" id="nav-opps" onclick="showView('opp-view')">
+        <i class="fas fa-chart-line"></i> Opportunities
+    </div>
+    <div class="nav-item" id="nav-prods" onclick="showView('prod-view')">
+        <i class="fas fa-box"></i> Products
+    </div>
+    <div class="nav-item" id="nav-bundles" onclick="showView('bundle-view')">
+        <i class="fas fa-cubes"></i> Product Bundles (BOQ)
+    </div>
+</div>
+            <div class="logout-section">
+                <button class="logout-btn" onclick="location.reload()">
+                    <i class="fas fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </nav>
+        <main class="main-container">
+            <div id="customer-view">
+                <div class="header">
+                    <h1>Customer Relationship Management</h1>
+                    <p>Global client activity and management.</p>
+                </div>
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Customer Information Management</h3>
+                        <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-plus"></i> Add Customer
+                        </button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CUSTOMER ID</th>
+                                <th>CUSTOMER NAME</th>
+                                <th>CONTACT PERSON</th>
+                                <th>EMAIL</th>
+                                <th>PHONE</th>
+                                <th>INDUSTRY</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CUST001</td>
+                                <td>TechFlow Solutions</td>
+                                <td>Alice Thompson</td>
+                                <td>contact@techflow.com</td>
+                                <td>+63 917 123 4567</td>
+                                <td>Technology</td>
+                                <td><span class="status-pill">Active</span></td>
+                                <td>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-pencil"></i></button>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="leads-view" style="display:none;">
+                <div class="header">
+                    <h1>Lead Entry and Assignment</h1>
+                    <p>Track incoming leads and assign to sales representatives.</p>
+                </div>
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Active Leads</h3>
+                        <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-plus"></i> Add Lead
+                        </button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>LEAD ID</th>
+                                <th>CUSTOMER ID</th>
+                                <th>LEAD SOURCE</th>
+                                <th>LEAD DATE</th>
+                                <th>BUNDLE ID</th>
+                                <th>ASSIGNED TO</th>
+                                <th>FOLLOW-UP</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LEAD001</td>
+                                <td><strong>CUST001</strong></td>
+                                <td>Website</td>
+                                <td>2025-01-01</td>
+                                <td>BUNDLE001</td>
+                                <td>SU004</td>
+                                <td>2025-01-05</td>
+                                <td><span class="status-pill" style="background: #e0f2fe; color: #0369a1;">New</span></td>
+                                <td>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-pencil"></i></button>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LEAD002</td>
+                                <td><strong>CUST002</strong></td>
+                                <td>Website</td>
+                                <td>2025-01-01</td>
+                                <td>BUNDLE002</td>
+                                <td>SU002</td>
+                                <td>2025-01-05</td>
+                                <td><span class="status-pill" style="background: #e0f2fe; color: #0369a1;">New</span></td>
+                                <td>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-pencil"></i></button>
+                                    <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+<div id="opp-view" style="display:none;">
+    <div class="header">
+        <h1>Lead Opportunity Management</h1>
+        <p>Track qualified leads through the sales pipeline.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Sales Pipeline</h3>
+            <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-plus"></i> Add Opportunity
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>OPPORTUNITY ID</th>
+                    <th>LEAD ID</th>
+                    <th>CUSTOMER ID</th>
+                    <th>ASSIGNED TO</th>
+                    <th>ESTIMATED VALUE</th>
+                    <th>PROBABILITY</th>
+                    <th>STAGE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>OPP001</td>
+                    <td>LEAD001</td>
+                    <td><strong>CUST001</strong></td>
+                    <td>SU004</td>
+                    <td>₱100,000</td>
+                    <td>70%</td>
+                    <td>Proposal</td>
+                    <td><span class="status-pill" style="background: #e0f2fe; color: #0369a1;">Open</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OPP002</td>
+                    <td>LEAD002</td>
+                    <td><strong>CUST002</strong></td>
+                    <td>SU002</td>
+                    <td>₱200,000</td>
+                    <td>70%</td>
+                    <td>Proposal</td>
+                    <td><span class="status-pill" style="background: #e0f2fe; color: #0369a1;">Open</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OPP003</td>
+                    <td>LEAD003</td>
+                    <td><strong>CUST003</strong></td>
+                    <td>SU003</td>
+                    <td>₱300,000</td>
+                    <td>70%</td>
+                    <td>Proposal</td>
+                    <td><span class="status-pill" style="background: #e0f2fe; color: #0369a1;">Open</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+    </div>
+</div>
+<div id="prod-view" style="display:none;">
+    <div class="header">
+        <h1>Product Master Management</h1>
+        <p>Maintain products and services used in CRM and quotations.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Product Inventory</h3>
+            <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PRODUCT ID</th>
+                    <th>PRODUCT NAME</th>
+                    <th>CATEGORY</th>
+                    <th>UNIT PRICE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PROD001</td>
+                    <td><strong>Product 1</strong></td>
+                    <td>General</td>
+                    <td>₱101</td>
+                    <td><span class="status-pill">Active</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PROD002</td>
+                    <td><strong>Product 2</strong></td>
+                    <td>General</td>
+                    <td>₱102</td>
+                    <td><span class="status-pill">Active</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PROD003</td>
+                    <td><strong>Product 3</strong></td>
+                    <td>General</td>
+                    <td>₱103</td>
+                    <td><span class="status-pill">Active</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PROD004</td>
+                    <td><strong>Product 4</strong></td>
+                    <td>General</td>
+                    <td>₱104</td>
+                    <td><span class="status-pill">Active</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PROD005</td>
+                    <td><strong>Product 5</strong></td>
+                    <td>General</td>
+                    <td>₱105</td>
+                    <td><span class="status-pill">Active</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="bundle-view" style="display:none;">
+    <div class="header">
+        <h1>Product Bundle (BOQ) Management</h1>
+        <p>Create and manage Bills of Quantities for standardized quotations.</p>
+    </div>
+    
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 25px;">
+        <button class="login-btn" style="width: auto; padding: 10px 24px;">
+            <i class="fas fa-plus"></i> Create Bundle
+        </button>
     </div>
 
-    <script>
-        function showDashboard() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('dashboard-container').style.display = 'flex';
-            document.getElementById('top-nav').style.display = 'flex';
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+        
+        <div class="content-card" style="position: relative; margin-bottom: 0;">
+            <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
+                <i class="fas fa-edit" style="color: var(--sidebar-active); cursor: pointer;"></i>
+                <i class="fas fa-trash" style="color: var(--accent-red); cursor: pointer;"></i>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; color: var(--sidebar-active); padding: 12px; border-radius: 8px;">
+                    <i class="fas fa-box-open" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h3 style="margin: 0; border: none; padding: 0;">BUNDLE001</h3>
+                    <small style="color: #64748b;">Bundle ID: BUNDLE001</small>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px;">Products Included:</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
+                    <span style="font-size: 0.9rem;">PROD001</span>
+                    <span style="font-weight: 700; font-size: 0.9rem;">Qty: 1</span>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); pt-15px; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b; font-weight: 500;">Total Value:</span>
+                <span style="font-size: 1.25rem; font-weight: 800; color: var(--sidebar-active);">₱101</span>
+            </div>
+        </div>
+
+        <div class="content-card" style="position: relative; margin-bottom: 0;">
+            <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
+                <i class="fas fa-edit" style="color: var(--sidebar-active); cursor: pointer;"></i>
+                <i class="fas fa-trash" style="color: var(--accent-red); cursor: pointer;"></i>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; color: var(--sidebar-active); padding: 12px; border-radius: 8px;">
+                    <i class="fas fa-box-open" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h3 style="margin: 0; border: none; padding: 0;">BUNDLE002</h3>
+                    <small style="color: #64748b;">Bundle ID: BUNDLE002</small>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px;">Products Included:</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
+                    <span style="font-size: 0.9rem;">PROD002</span>
+                    <span style="font-weight: 700; font-size: 0.9rem;">Qty: 2</span>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b; font-weight: 500;">Total Value:</span>
+                <span style="font-size: 1.25rem; font-weight: 800; color: var(--sidebar-active);">₱204</span>
+            </div>
+        </div>
+
+        <div class="content-card" style="position: relative; margin-bottom: 0;">
+            <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px;">
+                <i class="fas fa-edit" style="color: var(--sidebar-active); cursor: pointer;"></i>
+                <i class="fas fa-trash" style="color: var(--accent-red); cursor: pointer;"></i>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="background: #eff6ff; color: var(--sidebar-active); padding: 12px; border-radius: 8px;">
+                    <i class="fas fa-box-open" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h3 style="margin: 0; border: none; padding: 0;">BUNDLE003</h3>
+                    <small style="color: #64748b;">Bundle ID: BUNDLE003</small>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px;">Products Included:</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
+                    <span style="font-size: 0.9rem;">PROD003</span>
+                    <span style="font-weight: 700; font-size: 0.9rem;">Qty: 3</span>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b; font-weight: 500;">Total Value:</span>
+                <span style="font-size: 1.25rem; font-weight: 800; color: var(--sidebar-active);">₱309</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+</main>`;
+const buyingDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-cart-shopping"></i> Integrated Systems Buying</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-suppliers" onclick="showView('supplier-view')">
+                <i class="fas fa-truck-field"></i> Supplier Management
+            </div>
+            <div class="nav-item" id="nav-mat-req" onclick="showView('mat-req-view')">
+                <i class="fas fa-file-signature"></i> Material Requests
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="supplier-view">
+            <div class="header">
+                <h1>Supplier Management</h1>
+                <p>Manage and track your global supplier network.</p>
+            </div>
+            <div class="content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search records...">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>SUPPLIER NAME</th>
+                            <th>CONTACT PERSON</th>
+                            <th>CONTACT DETAILS</th>
+                            <th>ADDRESS</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1</td>
+                            <td><strong>Supplier 1</strong></td>
+                            <td>Contact 1</td>
+                            <td>supplier1@mail.com<br><small>09164843644</small></td>
+                            <td>City 1</td>
+                            <td><span class="status-pill">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#2</td>
+                            <td><strong>Supplier 2</strong></td>
+                            <td>Contact 2</td>
+                            <td>supplier2@mail.com<br><small>09492330944</small></td>
+                            <td>City 2</td>
+                            <td><span class="status-pill">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="mat-req-view" style="display:none;">
+            <div class="header">
+                <h1>Material Requests</h1>
+                <p>Track and review internal material requisitions.</p>
+            </div>
+            <div class="content-card">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search records...">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MR ID</th>
+                            <th>BUNDLE ID</th>
+                            <th>REQUESTED BY</th>
+                            <th>REQUEST DATE</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>MR-001</strong></td>
+                            <td>Bundle 12</td>
+                            <td>User 4</td>
+                            <td>2025-05-29</td>
+                            <td><span class="status-pill" style="background: #fef3c7; color: #92400e;">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>MR-002</strong></td>
+                            <td>Bundle 19</td>
+                            <td>User 1</td>
+                            <td>2025-11-29</td>
+                            <td><span class="status-pill" style="background: #fef3c7; color: #92400e;">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>`;
+    const projectDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-project-diagram"></i> Integrated Projects</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-projects" onclick="showView('project-list-view')">
+                <i class="fas fa-list-check"></i> Project List
+            </div>
+            <div class="nav-item" id="nav-tasks" onclick="showView('tasks-view')">
+                <i class="fas fa-tasks"></i> Tasks
+            </div>
+            <div class="nav-item" id="nav-timesheets" onclick="showView('timesheets-view')">
+                <i class="fas fa-clock"></i> Timesheets
+            </div>
+            <div class="nav-item" id="nav-users" onclick="showView('project-users-view')">
+                <i class="fas fa-users-gear"></i> Project Users
+            </div>
+            <div class="nav-item" id="nav-task-types" onclick="showView('task-types-view')">
+                <i class="fas fa-tags"></i> Task Types
+            </div>
+            <div class="nav-item" id="nav-activity-costs" onclick="showView('activity-costs-view')">
+                <i class="fas fa-file-invoice"></i> Activity Costs
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="project-list-view">
+            <div class="header">
+                <h1>Project List</h1>
+                <p>Total: 50 projects</p>
+            </div>
+            <div class="content-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PROJECT ID</th>
+                            <th>PROJECT NAME</th>
+                            <th>DESCRIPTION</th>
+                            <th>START DATE</th>
+                            <th>END DATE</th>
+                            <th>STATUS</th>
+                            <th>MANAGER ID</th>
+                            <th>ESTIMATED COST</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><strong>Project 1</strong></td>
+                            <td>ERP Implementation</td>
+                            <td>2025-01-01</td>
+                            <td>2025-06-30</td>
+                            <td><span class="status-pill" style="background: #000; color: #fff;">Ongoing</span></td>
+                            <td>301</td>
+                            <td>$50,100</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><strong>Project 2</strong></td>
+                            <td>ERP Implementation</td>
+                            <td>2025-01-01</td>
+                            <td>2025-06-30</td>
+                            <td><span class="status-pill" style="background: #000; color: #fff;">Ongoing</span></td>
+                            <td>302</td>
+                            <td>$50,200</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tasks-view" style="display:none;">
+    <div class="header">
+        <h1>Task List</h1>
+        <p>Total: 50 tasks</p>
+    </div>
+    <div class="content-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>TASK ID</th>
+                    <th>TASK NAME</th>
+                    <th>PROJECT ID</th>
+                    <th>TASK TYPE ID</th>
+                    <th>ASSIGNED USER</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                    <th>STATUS</th>
+                    <th>EST. HOURS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Task 1</strong></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>2025-01-01</td>
+                    <td>2025-03-01</td>
+                    <td><span class="status-pill" style="background: #e2e8f0; color: #475569;">In Progress</span></td>
+                    <td>8h</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Task 2</strong></td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>2025-01-01</td>
+                    <td>2025-03-01</td>
+                    <td><span class="status-pill" style="background: #e2e8f0; color: #475569;">In Progress</span></td>
+                    <td>8h</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="timesheets-view" style="display:none;">
+    <div class="header">
+        <h1>Timesheets</h1>
+        <p>Track employee hours across projects.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Timesheet Table</h3>
+            <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-plus"></i> Log Time
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>TIMESHEET ID</th>
+                    <th>TASK ID</th>
+                    <th>USER ID</th>
+                    <th>WORK DATE</th>
+                    <th>HOURS WORKED</th>
+                    <th>REMARKS</th>
+                    <th>APPROVAL STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2025-02-01</td>
+                    <td>8</td>
+                    <td>Worked hours</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>2025-02-01</td>
+                    <td>8</td>
+                    <td>Worked hours</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px;"><i class="fas fa-edit"></i></button>
+                        <button class="text-btn" style="padding: 4px 8px; font-size: 12px; color: var(--accent-red);"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <div id="project-users-view" style="display:none;">
+    <div class="header">
+        <h1>Project Member Management</h1>
+        <p>Assign and manage specialized project members and technicians.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Technician/User Table</h3>
+            <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-user-plus"></i> Add Member
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>USER ID</th>
+                    <th>EMPLOYEE ID</th>
+                    <th>USER ROLE</th>
+                    <th>SPECIALIZATION</th>
+                    <th>AVAILABILITY STATUS</th>
+                    <th>CONTACT NUMBER</th>
+                    <th>EMAIL</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>401</td>
+                    <td>Technician</td>
+                    <td>IT</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Available</span></td>
+                    <td>9000000001</td>
+                    <td><strong>user1@company.com</strong></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px;"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>402</td>
+                    <td>Technician</td>
+                    <td>IT</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Available</span></td>
+                    <td>9000000002</td>
+                    <td><strong>user2@company.com</strong></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px;"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>403</td>
+                    <td>Technician</td>
+                    <td>IT</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Available</span></td>
+                    <td>9000000003</td>
+                    <td><strong>user3@company.com</strong></td>
+                    <td>
+                        <button class="text-btn" style="padding: 4px 8px;"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <div id="task-types-view" style="display:none;">
+    <div class="header">
+        <h1>Task Type Configuration</h1>
+        <p>Define global categories for project activities.</p>
+    </div>
+    <div class="content-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>TASK TYPE ID</th>
+                    <th>TASK TYPE NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Installation</strong></td>
+                    <td>Installation of equipment or systems</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Maintenance</strong></td>
+                    <td>Routine maintenance activities</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>Inspection</strong></td>
+                    <td>Inspection and quality checking tasks</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <div id="activity-costs-view" style="display:none;">
+    <div class="header">
+        <h1>Activity Costing</h1>
+        <p>Review financial logs and standard labor rates for project tasks.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Standard Activity Cost Table</h3>
+            <button class="text-btn" style="background: var(--sidebar-active); color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-file-invoice-dollar"></i> Update Rates
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ACTIVITY COST ID</th>
+                    <th>TASK TYPE ID</th>
+                    <th>COST RATE (PHP)</th>
+                    <th>COST TYPE</th>
+                    <th>EFFECTIVE DATE</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td><strong>450.00</strong></td>
+                    <td>Labor</td>
+                    <td>2026-01-07</td>
+                    <td><button class="text-btn"><i class="fas fa-history"></i></button></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                    <td><strong>400.00</strong></td>
+                    <td>Labor</td>
+                    <td>2026-01-07</td>
+                    <td><button class="text-btn"><i class="fas fa-history"></i></button></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                    <td><strong>380.00</strong></td>
+                    <td>Labor</td>
+                    <td>2026-01-07</td>
+                    <td><button class="text-btn"><i class="fas fa-history"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </main>`;
+    const sellingDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-hand-holding-dollar"></i> Integrated Selling</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-customers" onclick="showView('customers-view')">
+                <i class="fas fa-users"></i> Customers
+            </div>
+            <div class="nav-item" id="nav-products" onclick="showView('products-view')">
+                <i class="fas fa-box"></i> Products
+            </div>
+            <div class="nav-item" id="nav-sales-orders" onclick="showView('sales-orders-view')">
+                <i class="fas fa-file-invoice"></i> Sales Orders
+            </div>
+            <div class="nav-item" id="nav-invoices" onclick="showView('invoices-view')">
+                <i class="fas fa-file-alt"></i> Invoices
+            </div>
+            <div class="nav-item" id="nav-payments" onclick="showView('payments-view')">
+                <i class="fas fa-money-bill-wave"></i> Payments
+            </div>
+            <div class="nav-item" id="nav-deliveries" onclick="showView('deliveries-view')">
+                <i class="fas fa-truck"></i> Deliveries
+            </div>
+            <div class="nav-item" id="nav-returns" onclick="showView('returns-view')">
+                <i class="fas fa-undo"></i> Returns
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="customers-view">
+            <div class="header">
+                <h1>Customer Management</h1>
+                <p>Manage your customer database.</p>
+            </div>
+            <div class="content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search by name or code...">
+                    </div>
+                    <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                        <i class="fas fa-plus"></i> Add Customer
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Customer Name</th>
+                            <th>Type</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>City</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CUST-001</strong></td>
+                            <td>ABC Corporation</td>
+                            <td>Corporate</td>
+                            <td>09171234567</td>
+                            <td>contact@abc.ph</td>
+                            <td>Manila</td>
+                            <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CUST-002</strong></td>
+                            <td>XYZ Trading</td>
+                            <td>Retail</td>
+                            <td>09189876543</td>
+                            <td>sales@xyz.ph</td>
+                            <td>Quezon City</td>
+                            <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+<div id="products-view" style="display:none;">
+    <div class="header">
+        <h1>Product Management</h1>
+        <p>Review and manage items linked to active quotations.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Product ID or Category...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Add Product Item
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>QUOTATION ITEM ID</th>
+                    <th>QUOTATION ID</th>
+                    <th>PRODUCT ID</th>
+                    <th>PRODUCT CATEGORY</th>
+                    <th>QUANTITY</th>
+                    <th>UNIT PRICE</th>
+                    <th>LINE TOTAL</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>QI00001</td>
+                    <td><strong>QUO0001</strong></td>
+                    <td>PROD001</td>
+                    <td>General</td>
+                    <td>1</td>
+                    <td>101.00</td>
+                    <td><strong>101.00</strong></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td>QI00002</td>
+                    <td><strong>QUO0001</strong></td>
+                    <td>PROD005</td>
+                    <td>General</td>
+                    <td>2</td>
+                    <td>105.00</td>
+                    <td><strong>210.00</strong></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td>QI00003</td>
+                    <td><strong>QUO0002</strong></td>
+                    <td>PROD002</td>
+                    <td>General</td>
+                    <td>2</td>
+                    <td>102.00</td>
+                    <td><strong>204.00</strong></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="sales-orders-view" style="display:none;">
+    <div class="header">
+        <h1>Sales Orders</h1>
+        <p>Manage and track customer purchase commitments.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Sales Orders...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> New Sales Order
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>SALES ORDER ID</th>
+                    <th>QUOTATION ID</th>
+                    <th>CUSTOMER ID</th>
+                    <th>ASSIGNED USER ID</th>
+                    <th>ORDER DATE</th>
+                    <th>REQUIRED DATE</th>
+                    <th>SHIPPING ADDRESS</th>
+                    <th>PAYMENT TERMS ID</th>
+                    <th>SUBTOTAL</th>
+                    <th>DISCOUNT</th>
+                    <th>TAX</th>
+                    <th>TOTAL</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SO0001</strong></td>
+                    <td>QUO0001</td>
+                    <td>CUST001</td>
+                    <td>SU002</td>
+                    <td>2025-01-10</td>
+                    <td>2025-01-29</td>
+                    <td>City</td>
+                    <td>TERM001</td>
+                    <td>311.00</td>
+                    <td>0.00</td>
+                    <td>37.32</td>
+                    <td><strong>348.32</strong></td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Confirmed</span></td>
+                </tr>
+                <tr>
+                    <td><strong>SO0002</strong></td>
+                    <td>QUO0002</td>
+                    <td>CUST002</td>
+                    <td>SU003</td>
+                    <td>2025-01-08</td>
+                    <td>2025-01-28</td>
+                    <td>City</td>
+                    <td>TERM002</td>
+                    <td>204.00</td>
+                    <td>10.20</td>
+                    <td>23.26</td>
+                    <td><strong>217.06</strong></td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Confirmed</span></td>
+                </tr>
+                <tr>
+                    <td><strong>SO0003</strong></td>
+                    <td>QUO0003</td>
+                    <td>CUST003</td>
+                    <td>SU004</td>
+                    <td>2025-01-05</td>
+                    <td>2025-01-12</td>
+                    <td>City</td>
+                    <td>TERM003</td>
+                    <td>1,107.00</td>
+                    <td>55.35</td>
+                    <td>126.20</td>
+                    <td><strong>1,177.85</strong></td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Confirmed</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="invoices-view" style="display:none;">
+    <div class="header">
+        <h1>Invoices & Official Receipts</h1>
+        <p>Review billing history and verified payment entries.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Invoice or Payment ID...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-file-invoice-dollar"></i> Create Invoice
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PAYMENT ENTRY ID</th>
+                    <th>SALES INVOICE ID</th>
+                    <th>CUSTOMER ID</th>
+                    <th>PAYMENT DATE</th>
+                    <th>PAYMENT METHOD</th>
+                    <th>AMOUNT PAID</th>
+                    <th>REFERENCE NO</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>PAY0001</strong></td>
+                    <td>INV0001</td>
+                    <td>CUST001</td>
+                    <td>2025-01-25</td>
+                    <td>Bank Transfer</td>
+                    <td>348.32</td>
+                    <td>REF300845</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Paid</span></td>
+                    <td><button class="text-btn"><i class="fas fa-print"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>PAY0002</strong></td>
+                    <td>INV0002</td>
+                    <td>CUST002</td>
+                    <td>2025-01-16</td>
+                    <td>Credit Card</td>
+                    <td>217.06</td>
+                    <td>REF859782</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Paid</span></td>
+                    <td><button class="text-btn"><i class="fas fa-print"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>PAY0003</strong></td>
+                    <td>INV0003</td>
+                    <td>CUST003</td>
+                    <td>2025-01-15</td>
+                    <td>E-Wallet</td>
+                    <td>1,177.85</td>
+                    <td>REF725780</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Paid</span></td>
+                    <td><button class="text-btn"><i class="fas fa-print"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="payments-view" style="display:none;">
+    <div class="header">
+        <h1>Payment Terms Configuration</h1>
+        <p>Define credit terms, due dates, and early payment discounts.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search terms...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Add New Term
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PAYMENT TERMS ID</th>
+                    <th>TERM NAME</th>
+                    <th>DAYS DUE</th>
+                    <th>DISCOUNT (%)</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>TERM001</strong></td>
+                    <td>NET 2 DAYS</td>
+                    <td>2</td>
+                    <td>0.5%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>TERM002</strong></td>
+                    <td>NET 4 DAYS</td>
+                    <td>4</td>
+                    <td>1.0%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>TERM003</strong></td>
+                    <td>NET 6 DAYS</td>
+                    <td>6</td>
+                    <td>1.5%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="deliveries-view" style="display:none;">
+    <div class="header">
+        <h1>Deliveries & Logistics</h1>
+        <p>Track outgoing shipments and delivery fulfillment status.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Delivery ID or SO...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-shipping-fast"></i> Create Delivery Note
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>DELIVERY NOTE ID</th>
+                    <th>SALES ORDER ID</th>
+                    <th>CUSTOMER ID</th>
+                    <th>DELIVERY DATE</th>
+                    <th>DELIVERY ADDRESS</th>
+                    <th>DELIVERED BY</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>DN-2025-001</strong></td>
+                    <td>SO0001</td>
+                    <td>CUST001</td>
+                    <td>2025-01-29</td>
+                    <td>City</td>
+                    <td>Logistics Team A</td>
+                    <td><span class="status-pill" style="background: #fef9c3; color: #854d0e;">Pending</span></td>
+                    <td><button class="text-btn"><i class="fas fa-truck-loading"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>DN-2025-002</strong></td>
+                    <td>SO0002</td>
+                    <td>CUST002</td>
+                    <td>2025-01-28</td>
+                    <td>City</td>
+                    <td>Logistics Team B</td>
+                    <td><span class="status-pill" style="background: #fef9c3; color: #854d0e;">Pending</span></td>
+                    <td><button class="text-btn"><i class="fas fa-truck-loading"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>DN-2025-003</strong></td>
+                    <td>SO0003</td>
+                    <td>CUST003</td>
+                    <td>2025-01-12</td>
+                    <td>City</td>
+                    <td>Third Party Courier</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Delivered</span></td>
+                    <td><button class="text-btn"><i class="fas fa-check-circle"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="returns-view" style="display:none;">
+    <div class="header">
+        <h1>Sales Returns</h1>
+        <p>Manage product returns, credit notes, and restock authorizations.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Return ID or Customer...">
+            </div>
+            <button class="text-btn" style="background: #ef4444; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-undo"></i> Process New Return
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>RETURN ID</th>
+                    <th>SALES ORDER ID</th>
+                    <th>CUSTOMER ID</th>
+                    <th>RETURN DATE</th>
+                    <th>REASON</th>
+                    <th>REFUND AMOUNT</th>
+                    <th>CONDITION</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RET-2025-001</strong></td>
+                    <td>SO0001</td>
+                    <td>CUST001</td>
+                    <td>2025-02-05</td>
+                    <td>Defective Item</td>
+                    <td>348.32</td>
+                    <td>Damaged</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Inspected</span></td>
+                </tr>
+                <tr>
+                    <td><strong>RET-2025-002</strong></td>
+                    <td>SO0002</td>
+                    <td>CUST002</td>
+                    <td>2025-02-10</td>
+                    <td>Wrong Specification</td>
+                    <td>217.06</td>
+                    <td>Like New</td>
+                    <td><span class="status-pill" style="background: #fef9c3; color: #854d0e;">Pending</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </main>`;
+    const distributionDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-boxes-stacked"></i> Distribution</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-items" onclick="showView('items-view')">
+                <i class="fas fa-tag"></i> Items
+            </div>
+            <div class="nav-item" id="nav-warehouses" onclick="showView('warehouses-view')">
+                <i class="fas fa-warehouse"></i> Warehouses
+            </div>
+            <div class="nav-item" id="nav-stock-balance" onclick="showView('stock-balance-view')">
+                <i class="fas fa-chart-pie"></i> Stock Balance
+            </div>
+            <div class="nav-item" id="nav-purchase-receipts" onclick="showView('purchase-receipts-view')">
+                <i class="fas fa-file-import"></i> Purchase Receipts
+            </div>
+            <div class="nav-item" id="nav-delivery-notes" onclick="showView('delivery-notes-view')">
+                <i class="fas fa-truck-loading"></i> Delivery Notes
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="items-view">
+    <div class="header">
+        <h1>Item Management</h1>
+        <p>Maintain your master list of products and raw materials.</p>
+    </div>
+    
+    
+
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Item ID or Name...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Add New Item
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM ID</th>
+                    <th>ITEM NAME</th>
+                    <th>UNIT</th>
+                    <th>COST</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ITM-001</strong></td>
+                    <td>Steel Bolt M8</td>
+                    <td>pcs</td>
+                    <td>5.5</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-002</strong></td>
+                    <td>Steel Nut M8</td>
+                    <td>pcs</td>
+                    <td>3.25</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-003</strong></td>
+                    <td>Aluminum Sheet</td>
+                    <td>sheet</td>
+                    <td>320</td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="warehouses-view" style="display:none;">
+    <div class="header">
+        <h1>Warehouse Management</h1>
+        <p>Monitor storage locations and site capacities.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Warehouse ID or Name...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Create New Warehouse
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>WAREHOUSE ID</th>
+                    <th>WAREHOUSE NAME</th>
+                    <th>LOCATION</th>
+                    <th>CAPACITY</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>WH-001</strong></td>
+                    <td>Main Distribution Center</td>
+                    <td>Manila Site A</td>
+                    <td>High</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>WH-002</strong></td>
+                    <td>Regional Hub North</td>
+                    <td>Bulacan Site B</td>
+                    <td>Medium</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>WH-003</strong></td>
+                    <td>Small Storage Facility</td>
+                    <td>Quezon City</td>
+                    <td>Low</td>
+                    <td><span class="status-pill" style="background: #fef9c3; color: #854d0e;">Full</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="stock-balance-view" style="display:none;">
+    <div class="header">
+        <h1>Stock Balance</h1>
+        <p>Monitor real-time inventory levels across all warehouse locations.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Item or Warehouse ID...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-file-export"></i> Export Report</button>
+                <button class="text-btn" style="background: #10b981; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-sync-alt"></i> Reconcile Stock
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM ID</th>
+                    <th>WAREHOUSE ID</th>
+                    <th>QUANTITY ON HAND</th>
+                    <th>RESERVED</th>
+                    <th>AVAILABLE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ITM-032</strong></td>
+                    <td>WH-001</td>
+                    <td>123</td>
+                    <td>0</td>
+                    <td>123</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-040</strong></td>
+                    <td>WH-001</td>
+                    <td>32</td>
+                    <td>5</td>
+                    <td>27</td>
+                    <td><span class="status-pill" style="background: #fef9c3; color: #854d0e;">Low Stock</span></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-042</strong></td>
+                    <td>WH-002</td>
+                    <td>340</td>
+                    <td>0</td>
+                    <td>340</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-013</strong></td>
+                    <td>WH-003</td>
+                    <td>376</td>
+                    <td>10</td>
+                    <td>366</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">In Stock</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="purchase-receipts-view" style="display:none;">
+    <div class="header">
+        <h1>Purchase Receipts</h1>
+        <p>Record and manage incoming inventory shipments from suppliers.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Receipt ID or Supplier...">
+            </div>
+            <button class="text-btn" style="background: #f59e0b; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-file-import"></i> New Purchase Receipt
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>RECEIPT ID</th>
+                    <th>SUPPLIER</th>
+                    <th>RECEIPT DATE</th>
+                    <th>WAREHOUSE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>PR-001</strong></td>
+                    <td>Global Industrial</td>
+                    <td>2026-01-15</td>
+                    <td>WH-001</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Received</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>PR-002</strong></td>
+                    <td>MetalWorks Inc.</td>
+                    <td>2026-01-18</td>
+                    <td>WH-002</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Received</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>PR-003</strong></td>
+                    <td>ElectroSupply Ph</td>
+                    <td>2026-01-20</td>
+                    <td>WH-001</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Received</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>PR-004</strong></td>
+                    <td>Global Industrial</td>
+                    <td>2026-01-22</td>
+                    <td>WH-003</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Received</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="delivery-notes-view" style="display:none;">
+    <div class="header">
+        <h1>Delivery Notes</h1>
+        <p>Track outbound shipments and confirmed customer deliveries.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Delivery ID or Customer...">
+            </div>
+            <button class="text-btn" style="background: #8b5cf6; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-shipping-fast"></i> Create Delivery Note
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>DELIVERY ID</th>
+                    <th>CUSTOMER</th>
+                    <th>DELIVERY DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>DN-001</strong></td>
+                    <td>Prime Builders Inc.</td>
+                    <td>2026-02-01</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Delivered</span></td>
+                    <td><button class="text-btn" title="View Details"><i class="fas fa-file-alt"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>DN-002</strong></td>
+                    <td>Prime Builders Inc.</td>
+                    <td>2026-02-03</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Delivered</span></td>
+                    <td><button class="text-btn" title="View Details"><i class="fas fa-file-alt"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>DN-003</strong></td>
+                    <td>Delta Industrial Systems</td>
+                    <td>2026-02-05</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Delivered</span></td>
+                    <td><button class="text-btn" title="View Details"><i class="fas fa-file-alt"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </main>`;
+    const accountsDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-calculator"></i> Accounts</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-sales-invoices" onclick="showView('sales-invoices-view')">
+                <i class="fas fa-file-invoice"></i> Sales Invoices
+            </div>
+            <div class="nav-item" id="nav-purchase-invoices" onclick="showView('purchase-invoices-view')">
+                <i class="fas fa-file-invoice-dollar"></i> Purchase Invoices
+            </div>
+            <div class="nav-item" id="nav-acc-payments" onclick="showView('acc-payments-view')">
+                <i class="fas fa-cash-register"></i> Payments
+            </div>
+            <div class="nav-item" id="nav-journal-entries" onclick="showView('journal-entries-view')">
+                <i class="fas fa-book"></i> Journal Entries
+            </div>
+            <div class="nav-item" id="nav-masters" onclick="showView('masters-view')">
+                <i class="fas fa-university"></i> Masters (COA)
+            </div>
+            <div class="nav-item" id="nav-landed-cost" onclick="showView('landed-cost-view')">
+                <i class="fas fa-shuttle-van"></i> Landed Cost
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="sales-invoices-view">
+            <div class="header">
+                <h1>Sales Invoices</h1>
+                <p>Manage accounts receivable and customer billing.</p>
+            </div>
+            <div class="content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search invoices...">
+                    </div>
+                    <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                        <i class="fas fa-plus"></i> Create Invoice
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>INVOICE ID</th>
+                            <th>CUSTOMER</th>
+                            <th>POSTING DATE</th>
+                            <th>DUE DATE</th>
+                            <th>TOTAL AMOUNT</th>
+                            <th>OUTSTANDING</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SINV-001</strong></td>
+                            <td>Prime Builders Inc.</td>
+                            <td>2026-02-01</td>
+                            <td>2026-02-15</td>
+                            <td>5,400.00</td>
+                            <td>0.00</td>
+                            <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Paid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+<div id="purchase-invoices-view" style="display:none;">
+    <div class="header">
+        <h1>Purchase Invoices</h1>
+        <p>Manage accounts payable, track supplier bills, and verify GL postings.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Invoice ID or Supplier...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> Create Bill
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>SUPPLIER</th>
+                    <th>DATE</th>
+                    <th>AMOUNT</th>
+                    <th>STATUS</th>
+                    <th>GL POSTED</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong style="color: #2563eb;">PINV-2024-001</strong></td>
+                    <td>Steel Works Ltd</td>
+                    <td>2024-02-10</td>
+                    <td>$5,000.00</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Paid</span></td>
+                    <td style="color: #10b981;"><i class="fas fa-check-circle"></i> Yes</td>
+                    <td><button class="text-btn"><i class="fas fa-file-alt"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong style="color: #2563eb;">PINV-2024-002</strong></td>
+                    <td>Tech Chips Inc</td>
+                    <td>2024-02-12</td>
+                    <td>$12,500.00</td>
+                    <td><span class="status-pill" style="background: #fee2e2; color: #991b1b;">Overdue</span></td>
+                    <td style="color: #10b981;"><i class="fas fa-check-circle"></i> Yes</td>
+                    <td><button class="text-btn"><i class="fas fa-file-alt"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="acc-payments-view" style="display:none;">
+    <div class="header">
+        <h1>Payment Entries</h1>
+        <p>Record and manage all incoming and outgoing financial transactions.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+        <div class="content-card" style="text-align: center; border-top: 4px solid #2563eb;">
+            <h2 style="font-size: 1.8rem; margin: 0;">4</h2>
+            <p style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Total Payments</p>
+        </div>
+        <div class="content-card" style="text-align: center; border-top: 4px solid #10b981;">
+            <h2 style="font-size: 1.8rem; margin: 0;">1</h2>
+            <p style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Cash</p>
+        </div>
+        <div class="content-card" style="text-align: center; border-top: 4px solid #3b82f6;">
+            <h2 style="font-size: 1.8rem; margin: 0;">2</h2>
+            <p style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Bank/Digital</p>
+        </div>
+        <div class="content-card" style="text-align: center; border-top: 4px solid #8b5cf6;">
+            <h2 style="font-size: 1.8rem; margin: 0;">₱117,900</h2>
+            <p style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Total Collected</p>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by ID, Party, or Reference...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-file-export"></i> Export</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-hand-holding-usd"></i> Receive Payment
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PAYMENT ID</th>
+                    <th>TYPE</th>
+                    <th>PARTY</th>
+                    <th>AMOUNT</th>
+                    <th>REFERENCE</th>
+                    <th>DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong style="color: #2563eb;">PAY-2024-001</strong></td>
+                    <td style="color: #10b981; font-weight: bold;">Receive</td>
+                    <td>Acme Corp</td>
+                    <td>$1,200.00</td>
+                    <td>INV-2024-001</td>
+                    <td>2024-02-15</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Cleared</span></td>
+                    <td><button class="text-btn"><i class="fas fa-print"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong style="color: #2563eb;">PAY-2024-002</strong></td>
+                    <td style="color: #ef4444; font-weight: bold;">Pay</td>
+                    <td>Steel Works Ltd</td>
+                    <td>$5,000.00</td>
+                    <td>PINV-2024-001</td>
+                    <td>2024-02-12</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Cleared</span></td>
+                    <td><button class="text-btn"><i class="fas fa-print"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong style="color: #2563eb;">PAY-2024-003</strong></td>
+                    <td style="color: #ef4444; font-weight: bold;">Pay</td>
+                    <td>Power Co</td>
+                    <td>$450.00</td>
+                    <td>Utility Bill</td>
+                    <td>2024-02-20</td>
+                    <td><span class="status-pill" style="background: #f1f5f9; color: #475569;">Draft</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="journal-entries-view" style="display:none;">
+    <div class="header">
+        <h1>Journal Entries</h1>
+        <p>Record non-standard transactions and maintain the integrity of the General Ledger.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search entries by ID or Type...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> New Journal Entry
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ENTRY TYPE</th>
+                    <th>DATE</th>
+                    <th>TOTAL DEBIT</th>
+                    <th>TOTAL CREDIT</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong style="color: #2563eb;">JV-2024-001</strong></td>
+                    <td>Sales Invoice</td>
+                    <td>2024-02-14</td>
+                    <td>$1,200.00</td>
+                    <td>$1,200.00</td>
+                    <td><span class="status-pill" style="background: #dbeafe; color: #1e40af;">Submitted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-file-invoice"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong style="color: #2563eb;">JV-2024-002</strong></td>
+                    <td>Purchase Invoice</td>
+                    <td>2024-02-10</td>
+                    <td>$5,000.00</td>
+                    <td>$5,000.00</td>
+                    <td><span class="status-pill" style="background: #dbeafe; color: #1e40af;">Submitted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-file-invoice"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong style="color: #2563eb;">JV-2024-003</strong></td>
+                    <td>Depreciation</td>
+                    <td>2024-01-31</td>
+                    <td>$250.00</td>
+                    <td>$250.00</td>
+                    <td><span class="status-pill" style="background: #f1f5f9; color: #475569;">Draft</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="masters-view" style="display:none;">
+    <div class="header">
+        <h1>Financial Masters</h1>
+        <p>Manage your Chart of Accounts and global payment configurations.</p>
+    </div>
+
+    <div class="content-card" style="margin-bottom: 30px;">
+        <div class="header" style="padding: 0; margin-bottom: 20px;">
+            <h3 style="color: #1e293b;">Chart of Accounts</h3>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ACCOUNT CODE</th>
+                    <th>ACCOUNT NAME</th>
+                    <th>ROOT TYPE</th>
+                    <th>REPORT TYPE</th>
+                    <th>CURRENCY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1100</strong></td>
+                    <td>Accounts Receivable</td>
+                    <td>Asset</td>
+                    <td>Balance Sheet</td>
+                    <td>PHP</td>
+                </tr>
+                <tr>
+                    <td><strong>2100</strong></td>
+                    <td>Accounts Payable</td>
+                    <td>Liability</td>
+                    <td>Balance Sheet</td>
+                    <td>PHP</td>
+                </tr>
+                <tr>
+                    <td><strong>4100</strong></td>
+                    <td>Sales Revenue</td>
+                    <td>Income</td>
+                    <td>Profit and Loss</td>
+                    <td>PHP</td>
+                </tr>
+                <tr>
+                    <td><strong>5100</strong></td>
+                    <td>Cost of Goods Sold</td>
+                    <td>Expense</td>
+                    <td>Profit and Loss</td>
+                    <td>PHP</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-card">
+        <div class="header" style="padding: 0; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #1e293b;">Payment Terms</h3>
+                <button class="text-btn" style="background: #10b981; color: white; padding: 8px 15px; border-radius: 6px; font-size: 0.85rem;">
+                    <i class="fas fa-plus"></i> New Term
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>TERM ID</th>
+                    <th>TERM NAME</th>
+                    <th>DAYS DUE</th>
+                    <th>DISCOUNT %</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>TERM001</strong></td>
+                    <td>NET 2 DAYS</td>
+                    <td>2</td>
+                    <td>0.5%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TERM002</strong></td>
+                    <td>NET 4 DAYS</td>
+                    <td>4</td>
+                    <td>1.0%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TERM003</strong></td>
+                    <td>NET 6 DAYS</td>
+                    <td>6</td>
+                    <td>1.5%</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="landed-cost-view" style="display:none;">
+    <div class="header">
+        <h1>Landed Cost Vouchers</h1>
+        <p>Distribute additional charges (freight, customs, etc.) to item costs for accurate inventory valuation.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Voucher ID or Receipt...">
+            </div>
+            <button class="text-btn" style="background: #6366f1; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus-circle"></i> Create Landed Cost Voucher
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>VOUCHER ID</th>
+                    <th>PURCHASE RECEIPT</th>
+                    <th>CHARGES TYPE</th>
+                    <th>TOTAL CHARGES</th>
+                    <th>DISTRIBUTION BASIS</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>LCV-2026-001</strong></td>
+                    <td>PR-001</td>
+                    <td>Freight & Insurance</td>
+                    <td>₱12,500.00</td>
+                    <td>Quantity</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Submitted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>LCV-2026-002</strong></td>
+                    <td>PR-002</td>
+                    <td>Customs Duties</td>
+                    <td>₱45,200.00</td>
+                    <td>Valuation</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Submitted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>LCV-2026-003</strong></td>
+                    <td>PR-004</td>
+                    <td>Local Transport</td>
+                    <td>₱3,800.00</td>
+                    <td>Weight</td>
+                    <td><span class="status-pill" style="background: #f1f5f9; color: #475569;">Draft</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </main>`;
+    const serviceDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-tools"></i> Service</div>
+        <div class="nav-group">
+            <div class="nav-item active" id="nav-maint-service" onclick="showView('maint-service-view')">
+                <i class="fas fa-screwdriver-wrench"></i> Maintenance Service
+            </div>
+            <div class="nav-item" id="nav-maint-visit" onclick="showView('maint-visit-view')">
+                <i class="fas fa-house-chimney-user"></i> Maintenance Visit
+            </div>
+            <div class="nav-item" id="nav-warranty-claim" onclick="showView('warranty-claim-view')">
+                <i class="fas fa-shield-halved"></i> Warranty Claim
+            </div>
+            <div class="nav-item" id="nav-issue" onclick="showView('issue-view')">
+                <i class="fas fa-ticket-alt"></i> Issue (Tickets)
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+<div id="maint-service-view">
+    <div class="header">
+        <h1>Maintenance Service</h1>
+        <p>Manage and track corrective and preventive service requests for deployed assets.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Service ID or Order...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> New Service Request
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>SERVICE ID</th>
+                    <th>SALES ORDER ID</th>
+                    <th>SERVICE TYPE</th>
+                    <th>REQUEST DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MS001</strong></td>
+                    <td>SO001</td>
+                    <td>Corrective</td>
+                    <td>2025-01-03</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Completed</span></td>
+                    <td><button class="text-btn"><i class="fas fa-tools"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>MS002</strong></td>
+                    <td>SO002</td>
+                    <td>Preventive</td>
+                    <td>2025-01-04</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Completed</span></td>
+                    <td><button class="text-btn"><i class="fas fa-tools"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>MS003</strong></td>
+                    <td>SO003</td>
+                    <td>Corrective</td>
+                    <td>2025-01-05</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Completed</span></td>
+                    <td><button class="text-btn"><i class="fas fa-tools"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="maint-visit-view" style="display:none;">
+    <div class="header">
+        <h1>Maintenance Visits</h1>
+        <p>Log and track on-site technician activities and routine equipment checks.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Visit ID or Technician...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-calendar-alt"></i> Schedule Visit</button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>VISIT ID</th>
+                    <th>SERVICE ID</th>
+                    <th>TECHNICIAN ID</th>
+                    <th>VISIT DATE</th>
+                    <th>REMARKS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MV001</strong></td>
+                    <td>MS001</td>
+                    <td>TECH02</td>
+                    <td>2025-01-04</td>
+                    <td>Routine check</td>
+                    <td><button class="text-btn"><i class="fas fa-clipboard-check"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>MV002</strong></td>
+                    <td>MS002</td>
+                    <td>TECH03</td>
+                    <td>2025-01-05</td>
+                    <td>Routine check</td>
+                    <td><button class="text-btn"><i class="fas fa-clipboard-check"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>MV003</strong></td>
+                    <td>MS003</td>
+                    <td>TECH04</td>
+                    <td>2025-01-06</td>
+                    <td>Routine check</td>
+                    <td><button class="text-btn"><i class="fas fa-clipboard-check"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="warranty-claim-view" style="display:none;">
+    <div class="header">
+        <h1>Warranty Claims</h1>
+        <p>Monitor customer warranty requests and track resolution status against sales orders.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Claim ID or Sales Order...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-shield-alt"></i> New Warranty Claim
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>CLAIM ID</th>
+                    <th>SALES ORDER ID</th>
+                    <th>CLAIM DATE</th>
+                    <th>ISSUE DESCRIPTION</th>
+                    <th>CLAIM STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>WC001</strong></td>
+                    <td>SO001</td>
+                    <td>2025-01-05</td>
+                    <td>Reported issue</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-file-contract"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>WC002</strong></td>
+                    <td>SO002</td>
+                    <td>2025-01-06</td>
+                    <td>Reported issue</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-file-contract"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>WC003</strong></td>
+                    <td>SO003</td>
+                    <td>2025-01-07</td>
+                    <td>Reported issue</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-file-contract"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    <div id="issue-view" style="display:none;">
+    <div class="header">
+        <h1>Support Issues</h1>
+        <p>Track technical resolutions linked to sales orders and customer reports.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Issue ID or Sales Order...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> Log New Issue
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ISSUE ID</th>
+                    <th>SALES ORDER ID</th>
+                    <th>REPORTED DATE</th>
+                    <th>ISSUE TYPE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>IS001</strong></td>
+                    <td>SO001</td>
+                    <td>2025-01-06</td>
+                    <td>Technical</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Resolved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>IS002</strong></td>
+                    <td>SO002</td>
+                    <td>2025-01-07</td>
+                    <td>Technical</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Resolved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>IS003</strong></td>
+                    <td>SO003</td>
+                    <td>2025-01-08</td>
+                    <td>Technical</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Resolved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </main>`;
+    const manufacturingDashboardHTML = `
+    <nav class="sidebar">
+        <div class="logo-area"><i class="fas fa-industry"></i> Manufacturing</div>
+        <div class="nav-group">
+            <div class="nav-section-title">Masters</div>
+            <div class="nav-item" id="nav-item-master" onclick="showView('item-master-view')">
+                <i class="fas fa-boxes"></i> Item Master
+            </div>
+            <div class="nav-item" id="nav-op-master" onclick="showView('op-master-view')">
+                <i class="fas fa-cogs"></i> Operation Master
+            </div>
+            <div class="nav-item" id="nav-ws-master" onclick="showView('ws-master-view')">
+                <i class="fas fa-charging-station"></i> Workstation Master
+            </div>
+            <div class="nav-item" id="nav-bom" onclick="showView('bom-view')">
+                <i class="fas fa-sitemap"></i> Bill of Materials
+            </div>
+            
+            <div class="nav-section-title">Production</div>
+            <div class="nav-item" id="nav-prod-plan" onclick="showView('prod-plan-view')">
+                <i class="fas fa-calendar-check"></i> Production Planning
+            </div>
+            <div class="nav-item active" id="nav-work-order" onclick="showView('work-order-view')">
+                <i class="fas fa-clipboard-list"></i> Work Order
+            </div>
+            <div class="nav-item" id="nav-job-card" onclick="showView('job-card-view')">
+                <i class="fas fa-id-badge"></i> Job Card
+            </div>
+            
+            <div class="nav-section-title">Stock & Logistics</div>
+            <div class="nav-item" id="nav-stock-ex" onclick="showView('stock-ex-view')">
+                <i class="fas fa-exchange-alt"></i> Stock Exchange
+            </div>
+            <div class="nav-item" id="nav-stock-trans" onclick="showView('stock-trans-view')">
+                <i class="fas fa-truck-loading"></i> Stock Transfer
+            </div>
+        </div>
+        <div class="logout-section">
+            <button class="logout-btn" onclick="location.reload()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </nav>
+    <main class="main-container">
+        <div id="work-order-view">
+            <div class="header">
+                <h1>Work Orders</h1>
+                <p>Monitor manufacturing progress and production timelines.</p>
+            </div>
+            <div class="content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search by WO ID or Item...">
+                    </div>
+                    <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                        <i class="fas fa-plus"></i> Create Work Order
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ITEM TO PRODUCE</th>
+                            <th>QUANTITY</th>
+                            <th>STATUS</th>
+                            <th>START DATE</th>
+                            <th>DUE DATE</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: #2563eb;">WO-2024-001</strong></td>
+                            <td>Office Chair Model X</td>
+                            <td>50</td>
+                            <td><span class="status-pill" style="background: #dbeafe; color: #1e40af;">In Progress</span></td>
+                            <td>2024-02-20</td>
+                            <td>2024-02-25</td>
+                            <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+<div id="item-master-view" style="display:none;">
+    <div class="header">
+        <h1>Item Master</h1>
+        <p>Maintain a central repository of all raw materials, sub-assemblies, and finished goods.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Item Code or Name...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> New Item
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM CODE</th>
+                    <th>ITEM NAME</th>
+                    <th>ITEM TYPE</th>
+                    <th>UOM</th>
+                    <th>STANDARD COST</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ITM-0001</strong></td>
+                    <td>Plastic Straw</td>
+                    <td>Raw Material</td>
+                    <td>kg</td>
+                    <td>96.76</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-0002</strong></td>
+                    <td>Spices Mix</td>
+                    <td>Raw Material</td>
+                    <td>L</td>
+                    <td>237.93</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>ITM-0003</strong></td>
+                    <td>Evaporated Milk</td>
+                    <td>Raw Material</td>
+                    <td>pcs</td>
+                    <td>184.34</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="op-master-view" style="display:none;">
+    <div class="header">
+        <h1>Operation Master</h1>
+        <p>Define and manage standard manufacturing operations, processing times, and hourly cost rates.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Operation Name...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Add Operation
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>OP ID</th>
+                    <th>OPERATION NAME</th>
+                    <th>STND. TIME (MIN)</th>
+                    <th>COST RATE / HR</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>Assembly B #1</td>
+                    <td>96</td>
+                    <td>86.14</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>Palletizing C #2</td>
+                    <td>133</td>
+                    <td>269.47</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>Frying Station #3</td>
+                    <td>125</td>
+                    <td>163.80</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="ws-master-view" style="display:none;">
+    <div class="header">
+        <h1>Workstation Master</h1>
+        <p>Manage production floor resources, physical locations, and daily output capacities.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Workstation or Location...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Add Workstation
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>WS ID</th>
+                    <th>WORKSTATION NAME</th>
+                    <th>LOCATION</th>
+                    <th>CAPACITY / DAY</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>WS-001 Mixer</td>
+                    <td>Biñan, Laguna</td>
+                    <td>847</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>WS-002 QC</td>
+                    <td>General Santos</td>
+                    <td>1,682</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>WS-003 Filler</td>
+                    <td>Legazpi City</td>
+                    <td>333</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="bom-view" style="display:none;">
+    <div class="header">
+        <h1>Bill of Materials</h1>
+        <p>Manage product recipes, multi-level assemblies, and production versions.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by BOM Name or Item ID...">
+            </div>
+            <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                <i class="fas fa-plus"></i> Create New BOM
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>BOM ID</th>
+                    <th>FINISHED ITEM ID</th>
+                    <th>BOM NAME</th>
+                    <th>VERSION</th>
+                    <th>CREATED DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>97</td>
+                    <td>BOM for Ensaym</td>
+                    <td>v2</td>
+                    <td>2025-03-06</td>
+                    <td><span class="status-pill" style="background: #f1f5f9; color: #475569;">Draft</span></td>
+                    <td><button class="text-btn"><i class="fas fa-list-ul"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>87</td>
+                    <td>BOM for Canned</td>
+                    <td>v1</td>
+                    <td>2025-05-21</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-list-ul"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>80</td>
+                    <td>BOM for Peanut</td>
+                    <td>v3</td>
+                    <td>2025-01-24</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Active</span></td>
+                    <td><button class="text-btn"><i class="fas fa-list-ul"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="prod-plan-view" style="display:none;">
+    <div class="header">
+        <h1>Production Planning</h1>
+        <p>Schedule and authorize high-level production cycles based on demand and inventory requirements.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Plan ID or Planner...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-calendar-plus"></i> Create New Plan
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PLAN ID</th>
+                    <th>PLAN DATE</th>
+                    <th>PLANNED START</th>
+                    <th>PLANNED END</th>
+                    <th>CREATED BY</th>
+                    <th>REMARKS</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>2025-09-30</td>
+                    <td>2025-12-03</td>
+                    <td>2025-12-29</td>
+                    <td>Liza Bautista</td>
+                    <td>Holiday volume</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>2025-07-13</td>
+                    <td>2025-07-17</td>
+                    <td>2025-12-21</td>
+                    <td>Maria Santos</td>
+                    <td>Replenishment r</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>2025-12-15</td>
+                    <td>2025-10-21</td>
+                    <td>2025-11-18</td>
+                    <td>Jenny Ramos</td>
+                    <td>Promo demand</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Approved</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="job-card-view" style="display:none;">
+    <div class="header">
+        <h1>Job Cards</h1>
+        <p>Track floor-level production tasks, technician assignments, and real-time execution status.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Job Card ID or Technician...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> Create Job Card
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>JOB CARD ID</th>
+                    <th>WORK ORDER ID</th>
+                    <th>ASSIGNED TO</th>
+                    <th>START TIME</th>
+                    <th>END TIME</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>3</td>
+                    <td>Paolo Lim</td>
+                    <td>2025-12-26 16:40</td>
+                    <td>2025-12-26 20:20</td>
+                    <td><span class="status-pill" style="background: #f1f5f9; color: #475569;">Pending</span></td>
+                    <td><button class="text-btn"><i class="fas fa-stopwatch"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>13</td>
+                    <td>Grace Mercado</td>
+                    <td>2025-08-31 09:30</td>
+                    <td>2025-08-31 13:10</td>
+                    <td><span class="status-pill" style="background: #dbeafe; color: #1e40af;">Ongoing</span></td>
+                    <td><button class="text-btn"><i class="fas fa-stopwatch"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>51</td>
+                    <td>Paolo Lim</td>
+                    <td>2025-10-12 13:10</td>
+                    <td>2025-10-12 16:20</td>
+                    <td><span class="status-pill" style="background: #dbeafe; color: #1e40af;">Ongoing</span></td>
+                    <td><button class="text-btn"><i class="fas fa-stopwatch"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="stock-ex-view" style="display:none;">
+    <div class="header">
+        <h1>Stock Exchange</h1>
+        <p>Monitor the issuance of raw materials and packaging supplies to production areas.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Exchange ID or Location...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-plus"></i> New Stock Issue
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>EXCHANGE ID</th>
+                    <th>WORK ORDER ID</th>
+                    <th>EXCHANGE DATE</th>
+                    <th>FROM LOCATION</th>
+                    <th>TO LOCATION</th>
+                    <th>REMARKS</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>57</td>
+                    <td>2025-08-16</td>
+                    <td>Main Warehouse</td>
+                    <td>Packaging Area</td>
+                    <td>Packaging supply issue</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Posted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>17</td>
+                    <td>2025-11-01</td>
+                    <td>Main Warehouse</td>
+                    <td>Packaging Area</td>
+                    <td>Raw material issue</td>
+                    <td><span class="status-pill" style="background: #fee2e2; color: #991b1b;">Void</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>57</td>
+                    <td>2025-07-12</td>
+                    <td>Main Warehouse</td>
+                    <td>Production Floor</td>
+                    <td>Packaging supply issue</td>
+                    <td><span class="status-pill" style="background: #fee2e2; color: #991b1b;">Void</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="stock-trans-view" style="display:none;">
+    <div class="header">
+        <h1>Stock Transfer</h1>
+        <p>Track the internal movement of materials between production stages and warehouses.</p>
+    </div>
+    <div class="content-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by Transfer ID or Reference...">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="text-btn" style="border: 1px solid #cbd5e1;"><i class="fas fa-filter"></i> Filter</button>
+                <button class="text-btn" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px;">
+                    <i class="fas fa-truck-moving"></i> New Transfer
+                </button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>TRANSFER ID</th>
+                    <th>REFERENCE TYPE</th>
+                    <th>REFERENCE ID</th>
+                    <th>TRANSFER DATE</th>
+                    <th>FROM LOCATION</th>
+                    <th>TO LOCATION</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>Work Order</td>
+                    <td>2</td>
+                    <td>2025-11-04</td>
+                    <td>WIP Area</td>
+                    <td>Dispatch Area</td>
+                    <td><span class="status-pill" style="background: #fee2e2; color: #991b1b;">Void</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>Production Output</td>
+                    <td>128</td>
+                    <td>2025-10-04</td>
+                    <td>Packaging Area</td>
+                    <td>Main Warehouse</td>
+                    <td><span class="status-pill" style="background: #fee2e2; color: #991b1b;">Void</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>Work Order</td>
+                    <td>19</td>
+                    <td>2025-07-15</td>
+                    <td>Production Floor</td>
+                    <td>WIP Area</td>
+                    <td><span class="status-pill" style="background: #dcfce7; color: #166534;">Posted</span></td>
+                    <td><button class="text-btn"><i class="fas fa-eye"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>    </main>`;
+let isAdmin = false; 
+function showDashboard() {
+    // Correctly targeting the ID 'dept-select' and 'password-input' we added to your style
+    const selectedUser = document.getElementById('dept-select').value;
+    const passwordInput = document.getElementById('password-input').value;
+    const container = document.getElementById('dashboard-container');
+
+    // 1. Check if a user was actually selected
+    if (!selectedUser) {
+        alert("Please select a department role from the dropdown.");
+        return;
+    }
+
+    // 2. Validate Password (using 'admin' for all users as requested)
+    if (passwordInput === "admin") {
+        
+        // 3. Routing based on the dropdown value
+        if (selectedUser === "adm_user") {
+            isAdmin = true;
+            container.innerHTML = adminMasterHubHTML;
+        }
+        else if (selectedUser === "acc_user") {
+            isAdmin = false;
+            container.innerHTML = accountsDashboardHTML;
+        } 
+        else if (selectedUser === "hr_user") {
+            isAdmin = false;
+            container.innerHTML = dashboardHTML;
+        }
+        else if (selectedUser === "crm_user") {
+            isAdmin = false;
+            container.innerHTML = crmDashboardHTML;
+        }
+        else if (selectedUser === "dist_user") {
+            isAdmin = false;
+            container.innerHTML = distributionDashboardHTML;
+        }
+        else if (selectedUser === "buy_user") {
+            isAdmin = false;
+            container.innerHTML = buyingDashboardHTML;
+        }
+        else if (selectedUser === "proj_user") {
+            isAdmin = false;
+            container.innerHTML = projectDashboardHTML;
+        }
+        else if (selectedUser === "sell_user") {
+            isAdmin = false;
+            container.innerHTML = sellingDashboardHTML;
+        }
+        else if (selectedUser === "serv_user") {
+            isAdmin = false;
+            container.innerHTML = serviceDashboardHTML;
+        }
+        else if (selectedUser === "mfg_user") {
+            isAdmin = false;
+            container.innerHTML = manufacturingDashboardHTML;
         }
 
-        function showView(viewId) {
-            const views = ['dashboard-main-view', 'registration-view', 'payroll-comp-view', 'salary-struct-view', 'payroll-entry-view', 'expense-claim-view'];
-            views.forEach(v => {
-                document.getElementById(v).style.display = (v.includes(viewId)) ? 'block' : 'none';
-            });
-            
-            const navMap = {
-                'dashboard-main': 'nav-dash', 'registration-view': 'nav-reg', 
-                'payroll-comp-view': 'nav-pay-comp', 'salary-struct-view': 'nav-sal-struct',
-                'payroll-entry-view': 'nav-pay-entry', 'expense-claim-view': 'nav-exp-claim'
-            };
-            
-            Object.values(navMap).forEach(id => document.getElementById(id).classList.remove('active'));
-            document.getElementById(navMap[viewId]).classList.add('active');
-        }
-    </script>
+        // Switch from login screen to dashboard
+        finalizeLogin();
+    } 
+    else {
+        alert("Access Denied: Invalid password.");
+    }
+}
+function finalizeLogin() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('dashboard-container').style.display = 'flex';
+}
+
+function loadModule(moduleKey) {
+    const container = document.getElementById('dashboard-container');
+    
+    // Map keys to your existing dashboard constants
+    const moduleMap = {
+        'crm': crmDashboardHTML,
+        'buying': buyingDashboardHTML,
+        'selling': sellingDashboardHTML,
+        'service': serviceDashboardHTML,
+        'mfg': manufacturingDashboardHTML,
+        'hr': dashboardHTML,
+        'project': projectDashboardHTML
+    };
+
+    container.innerHTML = moduleMap[moduleKey];
+
+    // If admin, inject a "Return to Hub" button at the top of the sidebar
+    if (isAdmin) {
+        const sidebar = container.querySelector('.nav-group');
+        const hubBtn = document.createElement('div');
+        hubBtn.className = 'nav-item';
+        hubBtn.style.color = '#2563eb';
+        hubBtn.style.fontWeight = 'bold';
+        hubBtn.style.borderBottom = '1px solid #e2e8f0';
+        hubBtn.style.marginBottom = '10px';
+        hubBtn.innerHTML = '<i class="fas fa-th"></i> Return to Master Hub';
+        hubBtn.onclick = () => { container.innerHTML = adminMasterHubHTML; };
+        sidebar.prepend(hubBtn);
+    }
+}
+function showView(viewId) {
+    // Find all view divs inside the main container and toggle based on ID
+    const views = document.querySelectorAll('.main-container > div');
+    views.forEach(v => {
+        v.style.display = (v.id === viewId || v.id.includes(viewId)) ? 'block' : 'none';
+    });
+
+    // Expanded navMap to include HR, CRM, Buying, Projects, and Selling
+    const navMap = {
+        // HR Views
+        'dashboard-main': 'nav-dash', 
+        'registration-view': 'nav-reg', 
+        'payroll-comp-view': 'nav-pay-comp', 
+        'salary-struct-view': 'nav-sal-struct',
+        'payroll-entry-view': 'nav-pay-entry', 
+        'expense-claim-view': 'nav-exp-claim',
+        // CRM Views
+        'customer-view': 'nav-cust', 
+        'leads-view': 'nav-leads', 
+        'opp-view': 'nav-opps', 
+        'prod-view': 'nav-prods',
+        'bundle-view': 'nav-bundles',
+        // Buying Views
+        'supplier-view': 'nav-suppliers',
+        'mat-req-view': 'nav-mat-req',
+        // Project Management Views
+        'project-list-view': 'nav-projects',
+        'tasks-view': 'nav-tasks',
+        'timesheets-view': 'nav-timesheets',
+        'project-users-view': 'nav-users',
+        'task-types-view': 'nav-task-types',
+        'activity-costs-view': 'nav-activity-costs',
+        // Selling Views
+        'customers-view': 'nav-customers',
+        'products-view': 'nav-products',
+        'sales-orders-view': 'nav-sales-orders',
+        'invoices-view': 'nav-invoices',
+        'payments-view': 'nav-payments',
+        'deliveries-view': 'nav-deliveries',
+        'returns-view': 'nav-returns',
+        // Distribution Views
+        'items-view': 'nav-items',
+        'warehouses-view': 'nav-warehouses',
+        'stock-balance-view': 'nav-stock-balance',
+        'purchase-receipts-view': 'nav-purchase-receipts',
+        'delivery-notes-view': 'nav-delivery-notes',
+        // Accounts Views
+        'sales-invoices-view': 'nav-sales-invoices',
+        'purchase-invoices-view': 'nav-purchase-invoices',
+        'acc-payments-view': 'nav-acc-payments',
+        'journal-entries-view': 'nav-journal-entries',
+        'masters-view': 'nav-masters',
+        'landed-cost-view': 'nav-landed-cost',
+        // Service Views
+        'maint-service-view': 'nav-maint-service',
+        'maint-visit-view': 'nav-maint-visit',
+        'warranty-claim-view': 'nav-warranty-claim',
+        'issue-view': 'nav-issue',
+        // Manufacturing Views
+        'item-master-view': 'nav-item-master',
+        'op-master-view': 'nav-op-master',
+        'ws-master-view': 'nav-ws-master',
+        'bom-view': 'nav-bom',
+        'prod-plan-view': 'nav-prod-plan',
+        'work-order-view': 'nav-work-order',
+        'job-card-view': 'nav-job-card',
+        'stock-ex-view': 'nav-stock-ex',
+        'stock-trans-view': 'nav-stock-trans'
+    };
+
+    // Reset all navigation items across all possible sidebars
+    Object.values(navMap).forEach(id => {
+        const navItem = document.getElementById(id);
+        if(navItem) navItem.classList.remove('active');
+    });
+
+    // Set the active class on the currently selected nav item
+    const activeNavId = navMap[viewId];
+    const activeNav = document.getElementById(activeNavId);
+    if(activeNav) activeNav.classList.add('active');
+}
+</script>
 </body>
 </html>
